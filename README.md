@@ -1,4 +1,131 @@
-# CoreUI Free React Admin Template [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?text=CoreUI%20-%20Free%React%204%20Admin%20Template%20&url=https://coreui.io&hashtags=bootstrap,admin,template,dashboard,panel,free,angular,react,vue)
+# AgroData Web Application
+
+Sistema web de gestión agrícola basado en React y CoreUI.
+
+## 🚀 Configuración de API
+
+### Variables de Entorno
+
+Copia `.env.example` a `.env.local` y configura tu entorno:
+
+```bash
+cp .env.example .env.local
+```
+
+Variables disponibles:
+- `VITE_API_BASE_URL`: URL base de la API (default: http://localhost:5142/api)
+- `VITE_API_TIMEOUT`: Timeout para peticiones HTTP en milisegundos (default: 10000)
+- `VITE_APP_NAME`: Nombre de la aplicación
+- `VITE_DEV_MODE`: Modo de desarrollo (true/false)
+
+### Endpoints de API
+
+La aplicación está configurada para conectarse con los siguientes endpoints:
+
+- **Autenticación**:
+  - `POST /Auth/login` - Inicio de sesión
+  - `POST /Auth/logout` - Cerrar sesión
+  - `POST /Auth/register` - Registro de usuario
+  - `POST /Auth/refresh-token` - Renovar token
+  - `POST /Auth/forgot-password` - Solicitar restablecimiento
+  - `POST /Auth/reset-password` - Restablecer contraseña
+
+- **Usuario**:
+  - `GET /User/profile` - Obtener perfil
+  - `PUT /User/profile` - Actualizar perfil
+  - `POST /User/change-password` - Cambiar contraseña
+
+### Características de la API
+
+- **Timeout**: 10 segundos por defecto
+- **Reintentos**: Hasta 3 intentos automáticos para errores de red
+- **Autenticación**: JWT tokens almacenados en localStorage
+- **Manejo de errores**: Códigos de estado HTTP específicos
+- **Validación**: Validación del lado del cliente y servidor
+
+## 🛠️ Desarrollo
+
+### Instalación
+
+```bash
+npm install
+```
+
+### Desarrollo
+
+```bash
+# Servidor de desarrollo en http://localhost:3000
+npm start
+```
+
+### Construcción
+
+```bash
+# Construir para producción
+npm run build
+```
+
+### Estructura del Proyecto
+
+```
+src/
+├── config/          # Configuración de API y aplicación
+├── services/        # Servicios de API (auth, user, etc.)
+├── components/      # Componentes comunes
+├── views/          # Páginas de la aplicación
+├── assets/         # Recursos estáticos
+└── scss/           # Estilos
+```
+
+## 📚 Servicios Disponibles
+
+### AuthService
+```javascript
+import authService from 'src/services/authService'
+
+// Login
+const result = await authService.login(email, password)
+
+// Logout
+await authService.logout()
+
+// Verificar autenticación
+const isAuth = authService.isAuthenticated()
+```
+
+### ApiService
+```javascript
+import apiService from 'src/services/apiService'
+
+// GET request
+const data = await apiService.get('/endpoint', { param: 'value' })
+
+// POST request
+const result = await apiService.post('/endpoint', { data: 'value' })
+```
+
+## 🔧 Configuración Avanzada
+
+### Proxy de Desarrollo
+
+El archivo `vite.config.mjs` está configurado para manejar proxies en desarrollo. Puedes agregar configuraciones adicionales:
+
+```javascript
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:5142',
+      changeOrigin: true,
+    }
+  }
+}
+```
+
+---
+
+# CoreUI Free React Admin Template
+
+Información del template base de CoreUI...
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![@coreui coreui](https://img.shields.io/badge/@coreui%20-coreui-lightgrey.svg?style=flat-square)](https://github.com/coreui/coreui)

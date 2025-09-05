@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -12,11 +12,58 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import authService from '../../../services/authService'
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    // Validación básica del lado del cliente
+    if (!email || !password) {
+      setError('Por favor, completa todos los campos')
+      setLoading(false)
+      return
+    }
+
+    if (!email.includes('@')) {
+      setError('Por favor, ingresa un email válido')
+      setLoading(false)
+      return
+    }
+
+    try {
+      const result = await authService.login(email, password)
+
+      if (result.success) {
+        setSuccess(result.message)
+        console.log('Login exitoso:', result.data)
+        
+        // Aquí puedes redirigir al usuario
+        // navigate('/dashboard') // si usas react-router
+        
+      } else {
+        setError(result.error)
+      }
+    } catch (error) {
+      console.error('Error inesperado:', error)
+      setError('Error inesperado. Intenta nuevamente')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -25,14 +72,35 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleLogin}>
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
+                    
+                    {error && (
+                      <CAlert color="danger" className="mb-3">
+                        {error}
+                      </CAlert>
+                    )}
+                    
+                    {success && (
+                      <CAlert color="success" className="mb-3">
+                        {success}
+                      </CAlert>
+                    )}
+                    
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput 
+                        placeholder="Email" 
+                        autoComplete="username"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={loading}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,12 +110,21 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        disabled={loading}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
-                          Login
+                        <CButton 
+                          type="submit" 
+                          color="primary" 
+                          className="px-4"
+                          disabled={loading}
+                        >
+                          {loading ? 'Iniciando sesión...' : 'Login'}
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
