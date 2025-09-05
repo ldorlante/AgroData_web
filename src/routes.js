@@ -51,6 +51,10 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
+// Maps
+const GoogleMaps = React.lazy(() => import('./views/maps/GoogleMaps'))
+const AgroMaps = React.lazy(() => import('./views/maps/AgroMaps'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -97,6 +101,9 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
+  { path: '/maps', name: 'Maps', element: GoogleMaps, exact: true },
+  { path: '/maps/google-maps', name: 'Google Maps', element: GoogleMaps },
+  { path: '/maps/agro-maps', name: 'Mapa Agrícola', element: AgroMaps },
 ]
 
 export default routes

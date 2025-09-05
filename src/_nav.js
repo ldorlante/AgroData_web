@@ -8,6 +8,8 @@ import {
   cilDescription,
   cilDrop,
   cilExternalLink,
+  cilLeaf,
+  cilLocationPin,
   cilNotes,
   cilPencil,
   cilPuzzle,
@@ -450,6 +452,29 @@ const _nav = [
       color: 'info',
       text: 'NEW',
     },
+  },
+  {
+    component: CNavTitle,
+    name: 'Maps',
+  },
+  {
+    component: CNavGroup,
+    name: 'Mapas',
+    to: '/maps',
+    icon: <CIcon icon={cilLocationPin} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Google Maps',
+        to: '/maps/google-maps',
+      },
+      {
+        component: CNavItem,
+        name: 'Mapa Agrícola',
+        to: '/maps/agro-maps',
+        icon: <CIcon icon={cilLeaf} size="sm" />,
+      },
+    ],
   },
   {
     component: CNavTitle,

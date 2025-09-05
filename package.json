@@ -26,6 +26,7 @@
     "@coreui/react": "^5.7.1",
     "@coreui/react-chartjs": "^3.0.0",
     "@coreui/utils": "^2.0.2",
+    "@googlemaps/react-wrapper": "^1.2.0",
     "@popperjs/core": "^2.11.8",
     "chart.js": "^4.5.0",
     "classnames": "^2.5.1",
