@@ -21,6 +21,17 @@ class AuthService {
       if (response.token) {
         localStorage.setItem('authToken', response.token)
         localStorage.setItem('user', JSON.stringify(response.user || {}))
+        
+        // Store refresh token if provided
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken)
+        }
+        
+        // Store token expiration if provided
+        if (response.expiresIn) {
+          const expirationTime = Date.now() + (response.expiresIn * 1000)
+          localStorage.setItem('tokenExpiration', expirationTime.toString())
+        }
       }
 
       return {
@@ -49,6 +60,8 @@ class AuthService {
     } finally {
       // Always clear local storage
       localStorage.removeItem('authToken')
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('tokenExpiration')
       localStorage.removeItem('user')
     }
 
@@ -80,23 +93,50 @@ class AuthService {
    */
   async refreshToken() {
     try {
-      const response = await apiService.post(API_ENDPOINTS.auth.refreshToken)
+      const currentRefreshToken = localStorage.getItem('refreshToken')
       
+      if (!currentRefreshToken) {
+        throw new Error('No refresh token available')
+      }
+
+      const response = await apiService.post(API_ENDPOINTS.auth.refreshToken, {
+        refreshToken: currentRefreshToken
+      })
+      
+      // Update tokens in localStorage
       if (response.token) {
         localStorage.setItem('authToken', response.token)
+      }
+
+      if (response.refreshToken) {
+        localStorage.setItem('refreshToken', response.refreshToken)
+      }
+
+      // Update token expiration if provided
+      if (response.expiresIn) {
+        const expirationTime = Date.now() + (response.expiresIn * 1000)
+        localStorage.setItem('tokenExpiration', expirationTime.toString())
+      }
+
+      // Update user data if provided
+      if (response.user) {
+        localStorage.setItem('user', JSON.stringify(response.user))
       }
 
       return {
         success: true,
         data: response,
+        message: 'Token actualizado exitosamente',
       }
     } catch (error) {
       // If refresh fails, logout user
-      this.logout()
+      console.error('Token refresh failed:', error)
+      await this.logout()
       return {
         success: false,
         error: error.message,
         status: error.status,
+        shouldRedirectToLogin: true,
       }
     }
   }
@@ -173,6 +213,62 @@ class AuthService {
    */
   getToken() {
     return localStorage.getItem('authToken')
+  }
+
+  /**
+   * Get current refresh token
+   */
+  getRefreshToken() {
+    return localStorage.getItem('refreshToken')
+  }
+
+  /**
+   * Check if token is expired or about to expire
+   */
+  isTokenExpired() {
+    const expirationTime = localStorage.getItem('tokenExpiration')
+    if (!expirationTime) {
+      return false // If no expiration time is set, assume token is valid
+    }
+
+    const currentTime = Date.now()
+    const expiration = parseInt(expirationTime)
+    
+    // Consider token expired if it expires in the next 5 minutes (300000 ms)
+    return currentTime >= (expiration - 300000)
+  }
+
+  /**
+   * Check if refresh token is available
+   */
+  hasRefreshToken() {
+    return !!localStorage.getItem('refreshToken')
+  }
+
+  /**
+   * Automatically refresh token if needed
+   */
+  async ensureValidToken() {
+    if (!this.isAuthenticated()) {
+      return { success: false, error: 'No auth token available' }
+    }
+
+    if (this.isTokenExpired() && this.hasRefreshToken()) {
+      console.log('Token expired, attempting to refresh...')
+      return await this.refreshToken()
+    }
+
+    return { success: true, message: 'Token is valid' }
+  }
+
+  /**
+   * Clear all authentication data
+   */
+  clearAuthData() {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('tokenExpiration')
+    localStorage.removeItem('user')
   }
 }
 

@@ -62,9 +62,34 @@ class ApiService {
   }
 
   /**
-   * Make HTTP request with retry logic
+   * Make HTTP request with retry logic and automatic token refresh
    */
   async makeRequest(endpoint, options = {}, retryCount = 0) {
+    // Skip token refresh for auth endpoints to avoid infinite loops
+    const isAuthEndpoint = endpoint.includes('/Auth/')
+    
+    // Try to ensure valid token before making request (except for auth endpoints)
+    if (!isAuthEndpoint) {
+      try {
+        // Dynamic import to avoid circular dependency
+        const { default: authService } = await import('./authService')
+        const tokenResult = await authService.ensureValidToken()
+        
+        if (!tokenResult.success && tokenResult.error === 'No auth token available') {
+          // User is not authenticated, let the request proceed and handle 401
+        } else if (!tokenResult.success && tokenResult.shouldRedirectToLogin) {
+          // Token refresh failed, user should be redirected to login
+          throw new Error('TOKEN_REFRESH_FAILED')
+        }
+      } catch (error) {
+        if (error.message === 'TOKEN_REFRESH_FAILED') {
+          throw error
+        }
+        // If token refresh fails for other reasons, continue with request
+        console.warn('Token refresh check failed:', error)
+      }
+    }
+
     const url = `${this.baseURL}${endpoint}`
     const requestOptions = {
       headers: this.getDefaultHeaders(),
@@ -77,6 +102,36 @@ class ApiService {
 
     try {
       const response = await this.fetchWithTimeout(url, requestOptions)
+      
+      // Handle 401 Unauthorized responses
+      if (response.status === 401 && !isAuthEndpoint) {
+        try {
+          // Try to refresh token once
+          const { default: authService } = await import('./authService')
+          const refreshResult = await authService.refreshToken()
+          
+          if (refreshResult.success) {
+            // Retry the original request with new token
+            const newRequestOptions = {
+              ...requestOptions,
+              headers: {
+                ...requestOptions.headers,
+                ...this.getDefaultHeaders(), // Get updated headers with new token
+              },
+            }
+            
+            const retryResponse = await this.fetchWithTimeout(url, newRequestOptions)
+            if (retryResponse.ok) {
+              const contentType = retryResponse.headers.get('content-type')
+              if (contentType && contentType.includes('application/json')) {
+                return await retryResponse.json()
+              }
+            }
+          }
+        } catch (refreshError) {
+          console.error('Token refresh failed during 401 handling:', refreshError)
+        }
+      }
       
       // Check if response is ok
       if (!response.ok) {
@@ -92,6 +147,15 @@ class ApiService {
 
       return await response.json()
     } catch (error) {
+      // Handle token refresh failure
+      if (error.message === 'TOKEN_REFRESH_FAILED') {
+        throw {
+          status: 401,
+          message: 'Sesión expirada. Por favor, inicia sesión nuevamente.',
+          shouldRedirectToLogin: true,
+        }
+      }
+
       // Retry logic for network errors
       if (this.shouldRetry(error, retryCount)) {
         await this.delay(this.retryDelay * Math.pow(2, retryCount)) // Exponential backoff
