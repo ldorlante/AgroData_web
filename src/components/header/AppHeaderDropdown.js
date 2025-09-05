@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   CAvatar,
   CBadge,
@@ -19,12 +20,26 @@ import {
   cilSettings,
   cilTask,
   cilUser,
+  cilAccountLogout,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
+import { useAuthContext } from '../../contexts/AuthContext'
 
 const AppHeaderDropdown = () => {
+  const navigate = useNavigate()
+  const { logout } = useAuthContext()
+
+  const handleLogout = async () => {
+    try {
+      logout()
+      navigate('/login', { replace: true })
+    } catch (error) {
+      console.error('Error durante el logout:', error)
+      navigate('/login', { replace: true })
+    }
+  }
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
@@ -84,9 +99,9 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="#">
-          <CIcon icon={cilLockLocked} className="me-2" />
-          Lock Account
+        <CDropdownItem href="#" onClick={handleLogout}>
+          <CIcon icon={cilAccountLogout} className="me-2" />
+          Cerrar Sesión
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>

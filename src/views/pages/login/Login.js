@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -17,13 +17,20 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import authService from '../../../services/authService'
+import { useAuthContext } from '../../../contexts/AuthContext'
 
 const Login = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { login: contextLogin } = useAuthContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  // Obtener la página desde donde vino el usuario
+  const from = location.state?.from?.pathname || '/dashboard'
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -48,11 +55,15 @@ const Login = () => {
       const result = await authService.login(email, password)
 
       if (result.success) {
-        setSuccess(result.message)
-        console.log('Login exitoso:', result.data)
+        // Actualizar contexto de autenticación
+        contextLogin(result.data.user)
         
-        // Aquí puedes redirigir al usuario
-        // navigate('/dashboard') // si usas react-router
+        setSuccess(result.message)
+        
+        // Redirigir a la página original o al dashboard por defecto
+        setTimeout(() => {
+          navigate(from, { replace: true })
+        }, 1000) // Pequeña pausa para mostrar el mensaje de éxito
         
       } else {
         setError(result.error)
