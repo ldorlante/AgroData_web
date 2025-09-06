@@ -92,7 +92,6 @@ class ApiService {
 
     const url = `${this.baseURL}${endpoint}`
     const requestOptions = {
-      headers: this.getDefaultHeaders(),
       ...options,
       headers: {
         ...this.getDefaultHeaders(),

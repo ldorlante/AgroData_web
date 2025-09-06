@@ -474,6 +474,11 @@ const _nav = [
         to: '/maps/agro-maps',
         icon: <CIcon icon={cilLeaf} size="sm" />,
       },
+      {
+        component: CNavItem,
+        name: 'Delimitar Terreno',
+        to: '/maps/polygon-map',
+      },
     ],
   },
   {

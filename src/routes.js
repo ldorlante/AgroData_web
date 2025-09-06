@@ -54,6 +54,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 // Maps
 const GoogleMaps = React.lazy(() => import('./views/maps/GoogleMaps'))
 const AgroMaps = React.lazy(() => import('./views/maps/AgroMaps'))
+const PolygonMap = React.lazy(() => import('./views/maps/PolygonMap'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -104,6 +105,7 @@ const routes = [
   { path: '/maps', name: 'Maps', element: GoogleMaps, exact: true },
   { path: '/maps/google-maps', name: 'Google Maps', element: GoogleMaps },
   { path: '/maps/agro-maps', name: 'Mapa Agrícola', element: AgroMaps },
+  { path: '/maps/polygon-map', name: 'Delimitar Terreno', element: PolygonMap },
 ]
 
 export default routes
