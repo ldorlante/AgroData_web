@@ -9,6 +9,7 @@ import DocsIcons from './DocsIcons'
 import DocsLink from './DocsLink'
 import DocsExample from './DocsExample'
 import ProtectedRoute from './ProtectedRoute'
+import MobileBottomNav from './MobileBottomNav'
 
 export {
   AppBreadcrumb,
@@ -22,4 +23,5 @@ export {
   DocsLink,
   DocsExample,
   ProtectedRoute,
+  MobileBottomNav,
 }

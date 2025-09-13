@@ -165,6 +165,16 @@ Please use following commit message format.
 - When feasible, default color palettes should comply with [WCAG color contrast guidelines](http://www.w3.org/TR/WCAG20/#visual-audio-contrast).
 - Except in rare cases, don't remove default `:focus` styles (via e.g. `outline: none;`) without providing alternative styles. See [this A11Y Project post](http://a11yproject.com/posts/never-remove-css-outlines) for more details.
 
+### SCSS Components Guidelines
+
+- **Component-specific styles**: When applying SCSS changes to a component, create a dedicated SCSS file with the same name as the component converted to kebab-case.
+  - Example: If modifying `AppHeader.js`, create `app-header.scss`
+  - Example: If modifying `Dashboard.js`, create `dashboard.scss`
+  - Example: If modifying `MobileBottomNav.js`, create `mobile-bottom-nav.scss`
+- **File location**: Place component SCSS files in the `src/scss` directory.
+- **Import convention**: Import the component-specific SCSS file in the main `style.scss` file using `@use` directive.
+- **Naming convention**: Use kebab-case (lowercase with hyphens) for component SCSS files, converting from PascalCase component names.
+
 ### JS
 
 - No semicolons (in client-side JS)

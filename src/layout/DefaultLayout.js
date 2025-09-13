@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import { AppContent, AppSidebar, AppFooter, AppHeader, MobileBottomNav } from '../components/index'
 
 const DefaultLayout = () => {
   return (
@@ -12,6 +12,7 @@ const DefaultLayout = () => {
         </div>
         <AppFooter />
       </div>
+      <MobileBottomNav />
     </div>
   )
 }

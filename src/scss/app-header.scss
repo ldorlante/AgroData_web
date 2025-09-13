@@ -1,0 +1,12 @@
+// AppHeader responsive behavior
+.header {
+  // Mobile (hasta 767px)
+  @media (max-width: 767.98px) {
+    position: static !important;
+  }
+  
+  // Tablet (768px a 1199px)
+  @media (min-width: 768px) and (max-width: 1199.98px) {
+    position: static !important;
+  }
+}

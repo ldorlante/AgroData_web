@@ -3,6 +3,8 @@
 );
 @use "@coreui/chartjs/scss/coreui-chartjs";
 @use "vendors/simplebar";
+@use "mobile-bottom-nav";
+@use "app-header";
 
 body {
   background-color: var(--cui-tertiary-bg);
@@ -63,5 +65,10 @@ body {
 
   .footer {
     --cui-footer-bg: var(--cui-body-bg);
+  }
+
+  .mobile-bottom-nav {
+    background: var(--cui-dark-bg);
+    border-top-color: var(--cui-dark-border-color);
   }
 }
