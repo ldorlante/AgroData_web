@@ -13,6 +13,7 @@ import { AuthProvider } from './contexts/AuthContext'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+const PublicDashboardLayout = React.lazy(() => import('./layout/PublicDashboardLayout'))
 
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
@@ -52,10 +53,12 @@ const App = () => {
           }
         >
           <Routes>
+            <Route exact path="/" element={<PublicDashboardLayout />} />
             <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} />
+            <Route exact path="/dashboard" name="Dashboard" element={<PublicDashboardLayout />} />
             <Route 
               path="*" 
               name="Home" 

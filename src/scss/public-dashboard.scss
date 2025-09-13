@@ -1,0 +1,42 @@
+/* Estilos mínimos para el dashboard público */
+.public-dashboard-container {
+  background-color: var(--cui-body-bg);
+  min-height: 100vh;
+}
+
+.public-footer {
+  background-color: var(--cui-body-tertiary-bg);
+  border-top: 1px solid var(--cui-border-color);
+  color: var(--cui-body-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .public-dashboard-container {
+    padding: 0.5rem;
+  }
+}
+
+/* Dark mode adjustments for public footer */
+[data-coreui-theme="dark"] .public-footer {
+  background-color: var(--cui-gray-800);
+  border-top: 1px solid var(--cui-border-color-translucent);
+}
+
+.public-dashboard-container {
+  background-color: var(--cui-body-bg);
+  min-height: 100vh;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .public-header .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .public-header .nav-item {
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+}

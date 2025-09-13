@@ -1,3 +1,4 @@
 import AppHeaderDropdown from './AppHeaderDropdown'
+import PublicHeader from './PublicHeader'
 
-export { AppHeaderDropdown }
+export { AppHeaderDropdown, PublicHeader }
