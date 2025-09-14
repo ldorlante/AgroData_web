@@ -51,12 +51,6 @@ const AppRoutes = () => {
         path="/" 
         element={isAuthenticated ? <DefaultLayout /> : <PublicDashboardLayout />} 
       />
-      <Route 
-        exact 
-        path="/dashboard" 
-        name="Dashboard" 
-        element={isAuthenticated ? <DefaultLayout /> : <PublicDashboardLayout />} 
-      />
       
       {/* Rutas protegidas */}
       <Route 
