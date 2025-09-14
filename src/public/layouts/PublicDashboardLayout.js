@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react'
 import { CContainer, CSpinner } from '@coreui/react'
-import Dashboard from '../views/dashboard/Dashboard'
-import { PublicHeader } from '../components/header'
+import { Dashboard } from '../../shared'
+import PublicHeader from '../components/PublicHeader'
 
 // Import styles
-import '../scss/style.scss'
-import '../scss/public-dashboard.scss'
+import '../../scss/style.scss'
+import '../styles/public-dashboard.scss'
 
 const PublicDashboardLayout = () => {
   return (
